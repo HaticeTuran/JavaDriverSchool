@@ -37,5 +37,8 @@ public class InstructorService {
         instructorRepository.deleteById(id);
     }
 
+    public Instructor getInstructorByUsername(String username) {return instructorRepository.findByUsername(username);
+    }
+
     // Other methods to interact with the repository
 }

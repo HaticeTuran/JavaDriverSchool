@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface InstructorRepository extends JpaRepository<Instructor, Long> {
     List<Instructor> findByRole(String role);
+
+    Instructor  findByUsername(String username);
 }

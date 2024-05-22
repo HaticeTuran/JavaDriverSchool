@@ -3,10 +3,12 @@ package com.example.driverschool.model;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.validation.constraints.NotBlank;
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Collections;
 
 @Entity
 @AllArgsConstructor
@@ -87,10 +89,12 @@ public class User implements UserDetails {
 
     // Omitted for brevity
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Implement this method to return the authorities (roles) of the user
-        return null;
+        // Return a collection of authorities (roles) for the user
+        // For simplicity, let's assume all users have a single role named "ROLE_USER"
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override

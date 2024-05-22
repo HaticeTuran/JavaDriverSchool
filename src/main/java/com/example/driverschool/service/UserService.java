@@ -23,7 +23,7 @@ public class UserService {
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
         user.setEmail(email);
-        user.setRole(role);
+        user.setRole(role); // Assign the specified role
         return userRepository.save(user);
     }
 
@@ -41,6 +41,11 @@ public class UserService {
 
     public User getUserById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    public User registerInstructor(String username, String password, String email) {
+        User user = new User(username, passwordEncoder.encode(password), email, "ROLE_INSTRUCTOR");
+        return userRepository.save(user);
     }
 
     // Other service methods as needed

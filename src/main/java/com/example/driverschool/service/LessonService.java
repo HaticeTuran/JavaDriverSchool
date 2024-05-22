@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LessonService {
@@ -18,16 +19,27 @@ public class LessonService {
     }
 
     public Lesson getLessonById(Long id) {
-        return lessonRepository.findById(id).orElse(null);
+        Optional<Lesson> lessonOptional = lessonRepository.findById(id);
+        return lessonOptional.orElse(null);
     }
 
     public Lesson createLesson(Lesson lesson) {
         return lessonRepository.save(lesson);
     }
 
+    public Lesson updateLesson(Long id, Lesson lesson) {
+        // Check if lesson with given id exists
+        if (lessonRepository.existsById(id)) {
+            lesson.setId(id); // Ensure the ID is set for update
+            return lessonRepository.save(lesson);
+        } else {
+            return null; // Lesson not found
+        }
+    }
+
     public void deleteLesson(Long id) {
         lessonRepository.deleteById(id);
     }
 
-    // Other methods for lesson management
+    // Add more methods for lesson management as needed
 }
