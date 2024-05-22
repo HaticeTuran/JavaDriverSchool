@@ -8,6 +8,7 @@ import java.util.List;
 
 @Getter
 @Entity
+@Table(name = "instructors")
 public class Instructor extends User {
 
     // other fields

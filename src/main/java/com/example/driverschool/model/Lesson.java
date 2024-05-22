@@ -2,6 +2,8 @@ package com.example.driverschool.model;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Lesson {
@@ -15,11 +17,14 @@ public class Lesson {
     @ManyToOne
     private Instructor instructor;
 
+    @ManyToMany
+    private Set<Student> students = new HashSet<>();
+
     private LocalDateTime startTime;
 
     private LocalDateTime endTime;
 
-    // Other attributes and relationships as needed
+    // Getters and Setters
 
     public Long getId() {
         return id;
@@ -45,6 +50,14 @@ public class Lesson {
         this.instructor = instructor;
     }
 
+    public Set<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(Set<Student> students) {
+        this.students = students;
+    }
+
     public LocalDateTime getStartTime() {
         return startTime;
     }
@@ -59,18 +72,5 @@ public class Lesson {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
-    }
-
-    // Other getters and setters
-
-    @Override
-    public String toString() {
-        return "Lesson{" +
-                "id=" + id +
-                ", subject='" + subject + '\'' +
-                ", instructor=" + instructor +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                '}';
     }
 }
