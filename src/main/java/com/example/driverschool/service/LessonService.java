@@ -1,5 +1,6 @@
 package com.example.driverschool.service;
 
+import com.example.driverschool.exception.ResourceNotFoundException;
 import com.example.driverschool.model.Lesson;
 import com.example.driverschool.repository.LessonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +19,26 @@ public class LessonService {
     }
 
     public Lesson getLessonById(Long id) {
-        return lessonRepository.findById(id).orElse(null);
+        return lessonRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Lesson not found with id: " + id));
     }
 
     public Lesson createLesson(Lesson lesson) {
         return lessonRepository.save(lesson);
     }
 
-    public void deleteLesson(Long id) {
-        lessonRepository.deleteById(id);
+    public Lesson updateLesson(Long id, Lesson updatedLesson) {
+        Lesson existingLesson = getLessonById(id);
+        existingLesson.setSubject(updatedLesson.getSubject());
+        existingLesson.setInstructor(updatedLesson.getInstructor());
+        existingLesson.setStartTime(updatedLesson.getStartTime());
+        existingLesson.setEndTime(updatedLesson.getEndTime());
+        // Set other properties as needed
+        return lessonRepository.save(existingLesson);
     }
 
-    // Other methods for lesson management
+    public void deleteLesson(Long id) {
+        Lesson existingLesson = getLessonById(id);
+        lessonRepository.delete(existingLesson);
+    }
 }

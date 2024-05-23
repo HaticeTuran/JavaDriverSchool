@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/lessons")
+@RequestMapping("/api/lessons")
 public class LessonController {
 
     @Autowired
@@ -24,6 +24,18 @@ public class LessonController {
         return lessonService.getLessonById(id);
     }
 
-    // Other CRUD endpoints for lessons
-}
+    @PostMapping
+    public Lesson createLesson(@RequestBody Lesson lesson) {
+        return lessonService.createLesson(lesson);
+    }
 
+    @PutMapping("/{id}")
+    public Lesson updateLesson(@PathVariable Long id, @RequestBody Lesson lesson) {
+        return lessonService.updateLesson(id, lesson);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteLesson(@PathVariable Long id) {
+        lessonService.deleteLesson(id);
+    }
+}

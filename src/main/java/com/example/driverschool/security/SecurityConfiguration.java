@@ -41,7 +41,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/auth/register", "/api/auth/login", "/api/users/{userId}/email").permitAll()
+                .antMatchers("/api/auth/register", "/api/auth/login", "/api/users/{userId}/email", "/api/lessons").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/api/users/**").hasRole("INSTRUCTOR")  // Only instructor can delete users
                 .anyRequest().authenticated()
                 .and()

@@ -12,7 +12,8 @@ public class Lesson {
 
     private String subject;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "instructor_id")
     private Instructor instructor;
 
     private LocalDateTime startTime;
@@ -61,16 +62,5 @@ public class Lesson {
         this.endTime = endTime;
     }
 
-    // Other getters and setters
-
-    @Override
-    public String toString() {
-        return "Lesson{" +
-                "id=" + id +
-                ", subject='" + subject + '\'' +
-                ", instructor=" + instructor +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                '}';
-    }
+    // Other getters and setters, toString method
 }
