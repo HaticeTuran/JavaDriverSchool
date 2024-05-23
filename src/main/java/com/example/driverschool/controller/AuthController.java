@@ -2,8 +2,12 @@ package com.example.driverschool.controller;
 
 import com.example.driverschool.model.User;
 import com.example.driverschool.service.UserService;
+import com.example.driverschool.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +21,12 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody @Valid User user) {
         try {
@@ -27,24 +37,23 @@ public class AuthController {
         }
     }
 
-
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid LoginRequest loginRequest) {
         try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+            );
+
             Optional<User> optionalUser = userService.loadUserByUsername(loginRequest.getUsername());
             if (optionalUser.isPresent()) {
-                User user = optionalUser.get();
-                if (userService.passwordMatches(loginRequest.getPassword(), user.getPassword())) {
-                    return ResponseEntity.ok("Login successful");
-                } else {
-                    return ResponseEntity.status(401).body("Invalid username or password");
-                }
+                UserDetails userDetails = optionalUser.get();
+                String jwt = jwtUtil.generateToken(userDetails);
+                return ResponseEntity.ok(new AuthenticationResponse(jwt));
             } else {
                 return ResponseEntity.status(401).body("Invalid username or password");
             }
-        } catch (UsernameNotFoundException e) {
-            return ResponseEntity.status(401).body("Invalid username or password");
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body("Invalid username or password: " + e.getMessage());
         }
     }
 
@@ -67,6 +76,18 @@ public class AuthController {
 
         public void setPassword(String password) {
             this.password = password;
+        }
+    }
+
+    public static class AuthenticationResponse {
+        private final String jwt;
+
+        public AuthenticationResponse(String jwt) {
+            this.jwt = jwt;
+        }
+
+        public String getJwt() {
+            return jwt;
         }
     }
 }
