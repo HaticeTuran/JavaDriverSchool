@@ -1,4 +1,4 @@
-package com.example.driverschool.config;
+package com.example.driverschool.security;
 
 import com.example.driverschool.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/auth/register", "/api/auth/login").permitAll()
+                .antMatchers("/api/auth/register", "/api/auth/login", "/api/users/{userId}/email").permitAll()
+                .antMatchers("/api/users/**").hasRole("INSTRUCTOR")
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

@@ -24,6 +24,19 @@ public class User implements UserDetails {
     @NotBlank(message = "Password is required")
     private String password;
 
+    private String name;
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    @Getter
+    private String surname;
+
     private String email;
 
     private String role; // 'STUDENT' or 'INSTRUCTOR'
@@ -112,4 +125,6 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
 }

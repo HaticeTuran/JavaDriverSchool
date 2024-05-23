@@ -1,5 +1,6 @@
 package com.example.driverschool.service;
 
+import com.example.driverschool.exception.ResourceNotFoundException;
 import com.example.driverschool.model.User;
 import com.example.driverschool.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,30 @@ public class UserService {
     public User getUserById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
     }
+
+    public User updateUser(Long userId, User updatedUserInfo) {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+        existingUser.setName(updatedUserInfo.getName());
+        existingUser.setEmail(updatedUserInfo.getEmail());
+        // Set other properties as needed
+        return userRepository.save(existingUser);
+    }
+
+    public User updateUserEmail(Long userId, String newEmail) {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+        existingUser.setEmail(newEmail);
+        return userRepository.save(existingUser);
+    }
+
+    public void deleteUser(Long userId) {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+        userRepository.delete(existingUser);
+    }
+
+
 
     // Other service methods as needed
 }
